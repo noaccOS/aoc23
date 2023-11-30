@@ -20,11 +20,11 @@
         craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
       in
       {
-        packages.default = craneLib.buildPackage
-          {
-            src = craneLib.cleanCargoSource (craneLib.path ./.);
-            strictDeps = true;
-          };
+        packages.default = craneLib.buildPackage {
+          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          strictDeps = true;
+        };
 
+        formatter = pkgs.nixpkgs-fmt;
       });
 }
