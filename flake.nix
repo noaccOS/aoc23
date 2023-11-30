@@ -25,6 +25,10 @@
           strictDeps = true;
         };
 
+        devShells.default = pkgs.mkShell {
+          inputsFrom = [ self.packages.${system}.default ];
+        };
+
         formatter = pkgs.nixpkgs-fmt;
       });
 }
