@@ -9,8 +9,8 @@ lazy_static! {
 
 #[derive(Debug, Clone)]
 pub struct DayInfo {
-    number: u8,
-    variant: DayVariant,
+    pub number: u8,
+    pub variant: DayVariant,
 }
 
 impl FromStr for DayInfo {
@@ -36,7 +36,7 @@ impl FromStr for DayInfo {
             }
         };
 
-        Ok(Day { number, variant })
+        Ok(DayInfo { number, variant })
     }
 }
 
