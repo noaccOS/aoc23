@@ -4,9 +4,8 @@ use super::utils;
 #[allow(unused_variables)]
 pub fn solve(input: &str) -> String {
     input
-    .lines()
-    .map(utils::line_to_number_with_letters)
-    .sum::<u128>()
-    .to_string()
-
+        .lines()
+        .map(utils::line_to_number_with_letters)
+        .sum::<u128>()
+        .to_string()
 }

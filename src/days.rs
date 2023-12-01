@@ -33,7 +33,7 @@ pub fn solve(day: &day_info::DayInfo) -> String {
         DayVariant::Both => {
             let (res_a, res_b) = variant_both(day.number);
             format!("A: {res_a}\nB: {res_b}")
-        },
+        }
     }
 }
 
