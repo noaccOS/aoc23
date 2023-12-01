@@ -8,12 +8,12 @@ lazy_static! {
 }
 
 #[derive(Debug, Clone)]
-pub struct Day {
+pub struct DayInfo {
     number: u8,
     variant: DayVariant,
 }
 
-impl FromStr for Day {
+impl FromStr for DayInfo {
     type Err = InvalidDayError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {

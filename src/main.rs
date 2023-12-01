@@ -1,14 +1,14 @@
 use clap::Parser;
 
-use day::Day;
+use day_info::DayInfo;
 
-mod day;
+mod day_info;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
-    #[arg(value_parser = clap::value_parser!(Day))]
-    day: Day,
+    #[arg(value_parser = clap::value_parser!(DayInfo))]
+    day: DayInfo,
 }
 
 fn main() {
