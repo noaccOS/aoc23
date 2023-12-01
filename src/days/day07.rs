@@ -1,6 +1,6 @@
 mod a;
 mod b;
-mod utils;
+pub mod utils;
 
 #[allow(dead_code)]
 pub fn solve_a() -> String {
