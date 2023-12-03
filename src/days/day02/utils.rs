@@ -34,6 +34,15 @@ pub fn check_game_validity(game: &str, maximums: &[(&str, u128)]) -> GameStatus 
     }
 }
 
+pub fn power_set(game: &str, colors: &[&str]) -> u128 {
+    colors.iter()
+       .map(|color| match all_color_values(game, color).iter().max() {
+        Some(n) => *n,
+        None => 0
+       })
+       .product()
+}
+
 fn all_color_values<'a>(game: &'a str, color: &'a str) -> Vec<u128> {
     let color = format!("(\\d+) {color}");
     Regex::new(&color)
