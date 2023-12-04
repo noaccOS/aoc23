@@ -3,20 +3,21 @@ pub fn read_input() -> &'static str {
 }
 
 #[derive(Clone, Debug)]
-pub struct Number {
+pub struct Number<'a> {
     pub value: u128,
-    pub neighbors: Vec<u8>,
+    pub neighbors: Vec<&'a u8>,
     begin_idx: usize,
     end_idx: usize,
 }
 
-impl Number {
+impl<'a> Number<'a> {
     fn neighbors(
-        &self,
-        self_line: &str,
-        previous_line: Option<&str>,
-        next_line: Option<&str>,
-    ) -> Vec<u8> {
+        begin_idx: usize,
+        end_idx: usize,
+        self_line: &'a str,
+        previous_line: Option<&'a str>,
+        next_line: Option<&'a str>,
+    ) -> Vec<&'a u8> {
         let self_line = self_line.as_bytes();
 
         let lines_to_check = match (previous_line, next_line) {
@@ -26,23 +27,21 @@ impl Number {
             _ => vec![],
         };
 
-        let begin_idx = match self.begin_idx {
+        let begin = match begin_idx {
             0 => 0,
             n => n - 1,
         };
 
-        let mut neighbors: Vec<u8> = (begin_idx..=self.end_idx + 1)
-            .flat_map(|i| {
-                lines_to_check
-                    .iter()
-                    .filter_map(move |l| l.get(i).and_then(|&x| Some(x)))
-            })
+        let mut neighbors: Vec<&u8> = (begin..=end_idx + 1)
+            .flat_map(|i| lines_to_check.iter().filter_map(move |l| l.get(i)))
             .collect();
 
-        if let Some(&neighbor) = self_line.get(begin_idx) {
+        if begin_idx != 0
+            && let Some(neighbor) = self_line.get(begin)
+        {
             neighbors.push(neighbor);
         };
-        if let Some(&neighbor) = self_line.get(self.end_idx + 1) {
+        if let Some(neighbor) = self_line.get(end_idx + 1) {
             neighbors.push(neighbor);
         }
 
@@ -53,22 +52,20 @@ impl Number {
         value: u128,
         begin_idx: usize,
         end_idx: usize,
-        self_line: &str,
-        previous_line: Option<&str>,
-        next_line: Option<&str>,
+        self_line: &'a str,
+        previous_line: Option<&'a str>,
+        next_line: Option<&'a str>,
     ) -> Self {
-        let mut s = Number {
+        Self {
             value,
             begin_idx,
             end_idx,
-            neighbors: vec![],
-        };
-        s.neighbors = s.neighbors(self_line, previous_line, next_line);
-        s
+            neighbors: Self::neighbors(begin_idx, end_idx, self_line, previous_line, next_line),
+        }
     }
 
     pub fn has_in_neighbors(&self, looking_for: &[u8]) -> bool {
-        looking_for.iter().any(|n| self.neighbors.contains(n))
+        self.neighbors.iter().any(|&x| looking_for.contains(x))
     }
 }
 
@@ -80,7 +77,7 @@ pub enum CharToDigit {
 #[derive(Clone, Debug)]
 pub struct GameLine<'a> {
     pub line: &'a str,
-    pub numbers: Vec<Number>,
+    pub numbers: Vec<Number<'a>>,
 }
 
 impl<'a> GameLine<'a> {

@@ -1,4 +1,5 @@
 #![feature(iter_map_windows)]
+#![feature(let_chains)]
 
 use clap::Parser;
 
