@@ -9,8 +9,6 @@ use by_address::ByAddress;
 pub struct Number<'a> {
     pub value: u128,
     pub neighbors: Vec<&'a u8>,
-    begin_idx: usize,
-    end_idx: usize,
 }
 
 impl<'a> Number<'a> {
@@ -61,8 +59,6 @@ impl<'a> Number<'a> {
     ) -> Self {
         Self {
             value,
-            begin_idx,
-            end_idx,
             neighbors: Self::neighbors(begin_idx, end_idx, self_line, previous_line, next_line),
         }
     }
