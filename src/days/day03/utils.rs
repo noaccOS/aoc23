@@ -189,11 +189,11 @@ impl<'a> Game<'a> {
     }
 
     pub fn gears(&self) -> Vec<Vec<&Number>> {
-        dbg!(self.lines
+        self.lines
             .iter()
             .flat_map(|l| l.numbers.iter())
             .filter(|n| n.has_in_neighbors(b"*"))
-            .fold(HashMap::new(), Self::populate_gears))
+            .fold(HashMap::new(), Self::populate_gears)
             .into_values()
             .filter(|neighbors| neighbors.len() >= 2)
             .collect()
