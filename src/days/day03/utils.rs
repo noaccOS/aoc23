@@ -2,6 +2,9 @@ pub fn read_input() -> &'static str {
     include_str!("input")
 }
 
+use std::collections::HashMap;
+use by_address::ByAddress;
+
 #[derive(Clone, Debug)]
 pub struct Number<'a> {
     pub value: u128,
@@ -165,18 +168,34 @@ impl<'a> Game<'a> {
         Self { lines: game_lines }
     }
 
-    pub fn part_numbers(&self) -> Vec<Number> {
+    pub fn part_numbers(&self) -> Vec<&Number> {
         let symbols = b"*@=%+$&/-#";
         self.lines
             .iter()
             .flat_map(|l| l.numbers.iter())
-            .filter_map(|n| {
-                if n.has_in_neighbors(symbols) {
-                    Some(n.clone())
-                } else {
-                    None
-                }
-            })
+            .filter(|n| n.has_in_neighbors(symbols))
+            .collect()
+    }
+
+    fn populate_gears<'b>(
+        mut gears_map: HashMap<ByAddress<&'b u8>, Vec<&'b Number<'b>>>,
+        element: &'b Number,
+    ) -> HashMap<ByAddress<&'b u8>, Vec<&'b Number<'b>>> {
+        for gear in element.neighbors.iter().filter(|x| ***x == b'*') {
+            let gear_neighbors = gears_map.entry(ByAddress(gear)).or_insert(vec![]);
+            (*gear_neighbors).push(element);
+        }
+        gears_map
+    }
+
+    pub fn gears(&self) -> Vec<Vec<&Number>> {
+        dbg!(self.lines
+            .iter()
+            .flat_map(|l| l.numbers.iter())
+            .filter(|n| n.has_in_neighbors(b"*"))
+            .fold(HashMap::new(), Self::populate_gears))
+            .into_values()
+            .filter(|neighbors| neighbors.len() >= 2)
             .collect()
     }
 }
