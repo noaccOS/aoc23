@@ -1,7 +1,14 @@
+use super::utils::Game;
+
 #[allow(dead_code)]
 #[allow(unused_variables)]
 pub fn solve(input: &str) -> String {
-    panic!("Not implemented yet")
+    Game::from_input(input)
+        .part_numbers()
+        .iter()
+        .map(|n| n.value)
+        .sum::<u128>()
+        .to_string()
 }
 
 #[cfg(test)]
@@ -20,6 +27,6 @@ mod tests {
 ...$.*....
 .664.598..";
         let result = solve(sample);
-        assert_eq!(result, "2286");
+        assert_eq!(result, "4361");
     }
 }

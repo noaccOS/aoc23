@@ -1,3 +1,5 @@
+#![feature(iter_map_windows)]
+
 use clap::Parser;
 
 use days::day_info::DayInfo;
