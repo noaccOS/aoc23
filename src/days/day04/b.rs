@@ -13,7 +13,6 @@ pub fn solve(input: &str) -> String {
 mod tests {
     use super::*;
 
-    #[ignore]
     #[test]
     fn sample() {
         let sample = include_str!("sample_b");
