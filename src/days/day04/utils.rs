@@ -14,6 +14,7 @@ pub struct Card {
     id: u128,
     winning: Vec<u128>,
     hand: Vec<u128>,
+    winning_cards: u32,
 }
 
 use std::collections::HashMap;
@@ -28,43 +29,35 @@ impl Card {
             .as_str()
             .parse::<u128>()
             .unwrap();
-        let winning = captures
+        let winning: Vec<_> = captures
             .name("winning")
             .unwrap()
             .as_str()
             .split_whitespace()
             .map(|num| num.parse::<u128>().unwrap())
             .collect();
-        let hand = captures
+        let hand: Vec<_> = captures
             .name("hand")
             .unwrap()
             .as_str()
             .split_whitespace()
             .map(|num| num.parse::<u128>().unwrap())
             .collect();
-
-        Self { id, winning, hand }
-    }
-
-    fn build_winning_hand(mut hashmap: HashMap<u128, u128>, elem: &u128) -> HashMap<u128, u128> {
-        let cur_value = hashmap.entry(*elem).or_insert(0);
-        *cur_value += 1;
-        hashmap
-    }
-
-    pub fn points(&self) -> u128 {
-        let winning_cards: u32 = self
-            .hand
+        let winning_cards: u32 = hand
             .iter()
-            .filter(|x| self.winning.contains(x))
+            .filter(|x| winning.contains(x))
             .count()
             .try_into()
             .unwrap();
 
-        if winning_cards == 0 {
+        Self { id, winning, hand, winning_cards }
+    }
+
+    pub fn points(&self) -> u128 {
+        if self.winning_cards == 0 {
             0
         } else {
-            u128::pow(2, winning_cards - 1)
+            u128::pow(2, self.winning_cards - 1)
         }
     }
 }
