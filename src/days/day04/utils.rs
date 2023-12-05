@@ -10,14 +10,13 @@ lazy_static! {
         Regex::new(r"^Card\s*(?<id>\d+):\s*(?<winning>\d[\d\s]*?)\s*\|\s*(?<hand>\d.*)$").unwrap();
 }
 
+#[allow(dead_code)]
 pub struct Card {
-    id: u128,
+    id: usize,
     winning: Vec<u128>,
     hand: Vec<u128>,
     winning_cards: u32,
 }
-
-use std::collections::HashMap;
 
 impl Card {
     pub fn from_input(line: &str) -> Self {
@@ -27,7 +26,7 @@ impl Card {
             .name("id")
             .unwrap()
             .as_str()
-            .parse::<u128>()
+            .parse::<usize>()
             .unwrap();
         let winning: Vec<_> = captures
             .name("winning")
@@ -60,4 +59,21 @@ impl Card {
             u128::pow(2, self.winning_cards - 1)
         }
     }
+}
+
+use std::iter;
+use std::collections::VecDeque;
+pub fn total_scratchcards(scratchcards: &[Card]) -> u128 {
+    // cards are 1-based indexed. scratchcards.len() + 0 at the front
+    let mut repetitions: VecDeque<u128> = iter::repeat(1).take(scratchcards.len()).collect();
+    repetitions.push_front(0);
+    for card in scratchcards {
+        let reps = repetitions[card.id];
+        let winning_cards: usize = card.winning_cards.try_into().unwrap();
+        let range = card.id + 1 .. card.id + 1 + winning_cards;
+        for id in range {
+            repetitions[id] += reps;
+        }
+    }
+    repetitions.iter().sum()
 }
