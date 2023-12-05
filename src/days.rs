@@ -22,7 +22,6 @@ mod day21;
 mod day22;
 mod day23;
 mod day24;
-mod day25;
 pub mod day_info;
 use day_info::DayVariant;
 
@@ -63,8 +62,7 @@ fn variant_a(day: u8) -> String {
         22 => day22::solve_a(),
         23 => day23::solve_a(),
         24 => day24::solve_a(),
-        25 => day25::solve_a(),
-        _ => panic!("Advent of code only has 25 days duh!"),
+        _ => panic!("Advent of code only has 24 days duh!"),
     }
 }
 
@@ -94,8 +92,7 @@ fn variant_b(day: u8) -> String {
         22 => day22::solve_b(),
         23 => day23::solve_b(),
         24 => day24::solve_b(),
-        25 => day25::solve_b(),
-        _ => panic!("Advent of code only has 25 days duh!"),
+        _ => panic!("Advent of code only has 24 days duh!"),
     }
 }
 
@@ -125,7 +122,6 @@ fn variant_both(day: u8) -> (String, String) {
         22 => day22::solve(),
         23 => day23::solve(),
         24 => day24::solve(),
-        25 => day25::solve(),
-        _ => panic!("Advent of code only has 25 days duh!"),
+        _ => panic!("Advent of code only has 24 days duh!"),
     }
 }
