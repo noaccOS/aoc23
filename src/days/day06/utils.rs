@@ -97,8 +97,6 @@ mod test {
     fn binary_search_first_bigger_test() {
         let one_elem = [1];
         let two_elem = [1, 2];
-        let three_elem = [1, 2, 3];
-        let four_elem = [1, 2, 3, 4];
 
         assert_eq!(binary_search_first_bigger(&0, &one_elem), 0);
         assert_eq!(binary_search_first_bigger(&1, &one_elem), 1);
