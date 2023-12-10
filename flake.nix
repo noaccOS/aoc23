@@ -25,7 +25,7 @@
             src = craneLib.path ./.;
             filter =
               path: type:
-              (builtins.match ".*/input$" path != null)
+              (builtins.match ".*/(input|sample_a|sample_b)$" path != null)
               || (craneLib.filterCargoSources path type);
           };
           strictDeps = true;
