@@ -85,7 +85,7 @@ impl Almanac {
             })
             .collect();
 
-        section.sort_by(|(a, to_a), (b, to_b)| a.start.cmp(&b.start));
+        section.sort_by(|(a, _to_a), (b, _to_b)| a.start.cmp(&b.start));
         Self::fill_section_with_missing(&section)
         //section
     }
@@ -146,17 +146,14 @@ impl Almanac {
             .map(|(_, location)| location)
             .collect();
         location_ranges.sort_by(|a, b| a.start.cmp(&b.start));
-        let min_seeds_iter = location_ranges.iter().filter_map(|location_range| {
-            self.location_to_humidity(&location_range)
-                .and_then(|(seed, pad)| Some(seed))
-        });
 
-        // let min_seed =
-        //     .next()
-        //     .unwrap();
-        min_seeds_iter
-            .map(|seed| self.seed_to_location(seed))
-            .min()
+        location_ranges
+            .iter()
+            .filter_map(|location_range| {
+                self.location_to_humidity(location_range)
+                    .and_then(|(_seed, pad)| Some(location_range.start + pad))
+            })
+            .next()
             .unwrap()
     }
 
@@ -169,7 +166,7 @@ impl Almanac {
         let intersections = Self::intersect_ranges(range, next_ranges, &0usize);
 
         for (intersection, pad) in intersections {
-            let next = self.temperature_to_light(&intersection, &pad);
+            let next = self.humidity_to_temperature(&intersection, &pad);
             if next.is_some() {
                 return next;
             }
