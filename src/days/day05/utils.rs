@@ -95,7 +95,7 @@ impl Almanac {
     ) -> Vec<(Range<usize>, Range<usize>)> {
         let mut res = Vec::with_capacity(section.len() * 2 - 1);
         let first = section[0].clone();
-        let (from, to) = first.clone();
+        let (from, _to) = first.clone();
         if from.start != 0 {
             let zero_to_start = 0..from.start;
             res.push((zero_to_start.clone(), zero_to_start));
