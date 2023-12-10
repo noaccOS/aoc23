@@ -140,30 +140,24 @@ impl Almanac {
     }
 
     pub fn seed_range_to_minimum_location(&self) -> usize {
-        // println!("temeperature_to_humb")
         let mut location_ranges: Vec<_> = self
             .humidity_to_location
             .iter()
             .map(|(_, location)| location)
             .collect();
         location_ranges.sort_by(|a, b| a.start.cmp(&b.start));
-        let min_seeds_iter = location_ranges
-        .iter()
-        .filter_map(|location_range| {
+        let min_seeds_iter = location_ranges.iter().filter_map(|location_range| {
             self.location_to_humidity(&location_range)
-                .and_then(|(seed, pad)| {
-                    println!(
-                        "found seed {} with pad {} for range {:?}",
-                        seed, pad, location_range
-                    );
-                    Some(seed)
-                })
+                .and_then(|(seed, pad)| Some(seed))
         });
 
         // let min_seed =
         //     .next()
         //     .unwrap();
-        min_seeds_iter.map(|seed| self.seed_to_location(seed)).min().unwrap()
+        min_seeds_iter
+            .map(|seed| self.seed_to_location(seed))
+            .min()
+            .unwrap()
     }
 
     fn location_to_humidity(&self, range: &Range<usize>) -> Option<(usize, usize)> {
@@ -175,19 +169,11 @@ impl Almanac {
         let intersections = Self::intersect_ranges(range, next_ranges, &0usize);
 
         for (intersection, pad) in intersections {
-            println!(
-                "location_to_humidity: range {:?}, intersection: {:?}",
-                range, intersection
-            );
             let next = self.temperature_to_light(&intersection, &pad);
             if next.is_some() {
                 return next;
             }
         }
-        println!(
-            "location_to_humidity: did not find anything for range {:?}",
-            range
-        );
         None
     }
 
@@ -200,25 +186,15 @@ impl Almanac {
         let intersections = Self::intersect_ranges(range, next_ranges, pad);
 
         for (intersection, pad) in intersections {
-            println!(
-                "humidity_to_temperature: range {:?}, intersection: {:?}",
-                range, intersection
-            );
             let next = self.temperature_to_light(&intersection, &pad);
             if next.is_some() {
                 return next;
             }
         }
-        println!(
-            "humidity_to_temperature: did not find anything for range {:?}",
-            range
-        );
         None
     }
 
     fn temperature_to_light(&self, range: &Range<usize>, pad: &usize) -> Option<(usize, usize)> {
-        println!("enter temperature_to_light");
-
         let next_ranges = self
             .light_to_temperature
             .iter()
@@ -231,10 +207,6 @@ impl Almanac {
                 return next;
             }
         }
-        println!(
-            "temperature_to_light: did not find anything for range {:?}",
-            range
-        );
         None
     }
 
@@ -248,10 +220,6 @@ impl Almanac {
                 return next;
             }
         }
-        println!(
-            "light_to_water: did not find anything for range {:?}",
-            range
-        );
         None
     }
 
@@ -265,10 +233,6 @@ impl Almanac {
                 return next;
             }
         }
-        println!(
-            "water_to_fertilizer: did not find anything for range {:?}",
-            range
-        );
         None
     }
 
@@ -282,10 +246,6 @@ impl Almanac {
                 return next;
             }
         }
-        println!(
-            "fertilizer_to_soil: did not find anything for range {:?}",
-            range
-        );
         None
     }
 
@@ -299,7 +259,6 @@ impl Almanac {
                 return next;
             }
         }
-        println!("soil_to_seed: did not find anything for range {:?}", range);
         None
     }
 
