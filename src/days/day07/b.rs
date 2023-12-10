@@ -1,21 +1,28 @@
 #[allow(unused_imports)]
 use super::utils::*;
+use itertools::Itertools;
 
 #[allow(dead_code)]
 #[allow(unused_variables)]
 pub fn solve(input: &str) -> String {
-    panic!("Not implemented yet")
+    input
+        .lines()
+        .map(Hand2::from_str)
+        .sorted_by(|h1, h2| h1.simple_cmp(&h2))
+        .enumerate()
+        .map(|(idx, hand)| (idx + 1) * hand.bid)
+        .sum::<usize>()
+        .to_string()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[ignore]
     #[test]
     fn sample() {
         let sample = include_str!("sample_b");
         let result = solve(sample);
-        assert_eq!(result, "");
+        assert_eq!(result, "5905");
     }
 }
