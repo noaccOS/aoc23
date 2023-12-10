@@ -2,7 +2,7 @@ pub fn read_input() -> &'static str {
     include_str!("input")
 }
 
-pub fn parse_input<'a>(input: &'a str) -> impl Iterator<Item = Race> + 'a {
+pub fn parse_input_a<'a>(input: &'a str) -> impl Iterator<Item = Race> + 'a {
     let mut lines = input.lines();
     let times = lines
         .next()
@@ -20,6 +20,30 @@ pub fn parse_input<'a>(input: &'a str) -> impl Iterator<Item = Race> + 'a {
     times
         .zip(records)
         .map(|(time, record)| Race { time, record })
+}
+
+pub fn parse_input_b<'a>(input: &str) -> Race {
+    let mut lines = input.lines();
+    let time = lines
+        .next()
+        .unwrap()
+        .split_whitespace()
+        .skip(1)
+        .collect::<Vec<_>>()
+        .join("")
+        .parse::<usize>()
+        .unwrap();
+    let record = lines
+        .next()
+        .unwrap()
+        .split_whitespace()
+        .skip(1)
+        .collect::<Vec<_>>()
+        .join("")
+        .parse::<usize>()
+        .unwrap();
+
+    Race { time, record }
 }
 
 pub struct Race {
@@ -53,11 +77,10 @@ fn binary_search_first_bigger(val: &usize, l: &[usize]) -> usize {
     do_binary_search_first_bigger(val, l, 0..l.len())
 }
 fn do_binary_search_first_bigger(val: &usize, l: &[usize], range: Range<usize>) -> usize {
-    println!("range: {:?}", range);
     if range.is_empty() {
         return range.start;
     }
-    let mid = dbg!(range.len() / 2 + range.start);
+    let mid = range.len() / 2 + range.start;
     let first_bigger = mid + 1;
     match l[mid].cmp(val) {
         Ordering::Equal => first_bigger,

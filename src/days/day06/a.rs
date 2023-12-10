@@ -1,7 +1,7 @@
 use super::utils::*;
 
 pub fn solve(input: &str) -> String {
-    parse_input(input).map(|race| race.beating_the_record()).product::<usize>().to_string()
+    parse_input_a(input).map(|race| race.beating_the_record()).product::<usize>().to_string()
 }
 
 
