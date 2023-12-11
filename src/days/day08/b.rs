@@ -4,18 +4,18 @@ use super::utils::*;
 #[allow(dead_code)]
 #[allow(unused_variables)]
 pub fn solve(input: &str) -> String {
-    panic!("Not implemented yet")
+    let map = Map::from_input(input);
+    map.ghost_steps().to_string()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[ignore]
     #[test]
     fn sample() {
         let sample = include_str!("sample_b");
         let result = solve(sample);
-        assert_eq!(result, "");
+        assert_eq!(result, "6");
     }
 }
