@@ -93,11 +93,6 @@ impl Map {
 }
 
 use num::Integer;
-use num::Unsigned;
-
-fn lcm<T: Unsigned + Integer>(fst: &T, snd: &T) -> T {
-    (*fst).lcm(snd)
-}
 
 fn merge_lcm(acc: &Vec<usize>, v: &Vec<usize>) -> Vec<usize> {
     if acc.is_empty() {
@@ -107,7 +102,7 @@ fn merge_lcm(acc: &Vec<usize>, v: &Vec<usize>) -> Vec<usize> {
         return acc.clone();
     }
     acc.iter()
-        .flat_map(|elem| v.iter().map(|other| lcm(elem, other)))
+        .flat_map(|elem| v.iter().map(|other| elem.lcm(other)))
         .collect()
 }
 
