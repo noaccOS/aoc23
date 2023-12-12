@@ -4,18 +4,20 @@ use super::utils::*;
 #[allow(dead_code)]
 #[allow(unused_variables)]
 pub fn solve(input: &str) -> String {
-    panic!("Not implemented yet")
+    let lines = input
+        .lines()
+        .map(|l| l.split_whitespace().map(|n| n.parse::<isize>().unwrap()).rev());
+    lines.map(|l| predict_next(l)).sum::<isize>().to_string()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[ignore]
     #[test]
     fn sample() {
         let sample = include_str!("sample_b");
         let result = solve(sample);
-        assert_eq!(result, "");
+        assert_eq!(result, "5");
     }
 }
