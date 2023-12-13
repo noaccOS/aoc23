@@ -2,7 +2,7 @@ pub fn read_input() -> &'static str {
     include_str!("input")
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum TileType {
     Vertical,
     Horizontal,
@@ -93,13 +93,13 @@ impl Map {
         x: isize,
         y: isize,
         from: Direction,
-        acc: &mut Vec<TileType>,
-    ) -> Option<Vec<TileType>> {
+        acc: &mut Vec<(TileType, isize, isize)>,
+    ) -> Option<Vec<(TileType, isize, isize)>> {
         if x < 0 || y < 0 {
             return None;
         }
         let tile = *self.tiles.get(y as usize)?.get(x as usize)?;
-        acc.push(tile);
+        acc.push((tile, x, y));
         if tile == TileType::Starting {
             return Some(acc.clone());
         }
@@ -132,7 +132,7 @@ impl Map {
         }
     }
 
-    pub fn find_loop(&self) -> Vec<TileType> {
+    pub fn find_loop(&self) -> Vec<(TileType, isize, isize)> {
         let (x, y) = self.starting;
         let x = x as isize;
         let y = y as isize;
@@ -146,6 +146,60 @@ impl Map {
             .next()
             .unwrap()
     }
+
+    pub fn find_area(&self) -> usize {
+        let full_loop = self.find_loop();
+        let base_loop: Vec<_> = full_loop
+            .iter()
+            .filter(|(t, _, _)| *t != TileType::Vertical && *t != TileType::Horizontal)
+            .map(|t| *t)
+            .collect();
+        gauss(&base_loop) - perimeter_area(&full_loop)
+    }
+}
+
+use itertools::Itertools;
+use std::collections::HashMap;
+
+fn perimeter_area(full_loop: &Vec<(TileType, isize, isize)>) -> usize {
+    let mut full_loop = full_loop.clone();
+    full_loop.sort_unstable_by_key(|tile| tile.0);
+    let items: HashMap<TileType, usize> = full_loop
+        .iter()
+        .group_by(|tile| tile.0)
+        .into_iter()
+        .map(|(key, values)| (key, values.count()))
+        .collect();
+
+    let simple = items.get(&TileType::Horizontal).unwrap_or(&0)
+        + items.get(&TileType::Vertical).unwrap_or(&0);
+    let simple = simple / 2;
+
+    let ones_and_quarters = [
+        TileType::DownLeft,
+        TileType::DownRight,
+        TileType::UpLeft,
+        TileType::UpRight,
+    ]
+    .iter()
+    .map(|k| items.get(k).unwrap_or(&0))
+    .map(|v| (*v as f64 / 2f64, v % 2))
+    .collect::<Vec<_>>();
+    let ones: usize = ones_and_quarters.iter().map(|x| x.0).sum::<f64>() as usize;
+    let quarters: usize = ones_and_quarters.iter().map(|x| x.1).sum::<usize>() / 4;
+
+    simple + ones + quarters
+}
+
+fn gauss(polygon: &Vec<(TileType, isize, isize)>) -> usize {
+    let (_, x_first, y_first) = polygon[0];
+    let (_, x_last, y_last) = polygon.last().unwrap();
+    let sum: isize = polygon
+        .iter()
+        .map_windows(|[(_, x1, y1), (_, x2, y2)]| x1 * y2 - x2 * y1)
+        .sum();
+    let sum: isize = sum + x_last * y_first - x_first * y_last;
+    (sum.abs() / 2) as usize
 }
 
 impl Display for Map {

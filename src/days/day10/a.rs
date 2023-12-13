@@ -20,6 +20,6 @@ mod tests {
         let map = Map::from_input(sample);
         println!("{}", map);
 
-        assert_eq!(result, "a");
+        assert_eq!(result, "8");
     }
 }
