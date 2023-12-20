@@ -4,7 +4,8 @@ use super::utils::*;
 #[allow(dead_code)]
 #[allow(unused_variables)]
 pub fn solve(input: &str) -> String {
-    panic!("Not implemented yet")
+    let all_sections = Sections::parse(input);
+    all_sections.sections.iter().map(|section| section.value()).sum::<usize>().to_string()
 }
 
 
@@ -12,11 +13,10 @@ pub fn solve(input: &str) -> String {
 mod tests {
     use super::*;
 
-    #[ignore]
     #[test]
     fn sample() {
         let sample = include_str!("sample_a");
         let result = solve(sample);
-        assert_eq!(result, "");
+        assert_eq!(result, "405");
     }
 }
