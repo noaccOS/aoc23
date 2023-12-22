@@ -1,5 +1,6 @@
 #![feature(iter_map_windows)]
 #![feature(let_chains)]
+#![feature(control_flow_enum)]
 
 use clap::Parser;
 

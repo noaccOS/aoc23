@@ -70,6 +70,7 @@ dependencies = [
  "num",
  "num-integer",
  "regex",
+ "strsim",
  "thiserror",
 ]
 
