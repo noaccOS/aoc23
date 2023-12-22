@@ -35,6 +35,7 @@
 
         devShells.default = pkgs.mkShell {
           inputsFrom = [ self.packages.${system}.default ];
+          RUST_SRC_PATH = "${toolchain}";
         };
 
         formatter = pkgs.nixpkgs-fmt;
