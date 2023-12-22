@@ -16,7 +16,9 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        toolchain = rust-overlay.packages.${system}.rust-nightly;
+        toolchain = rust-overlay.packages.${system}.rust-nightly.override {
+          extensions = [ "rust-src" "rust-analyzer-preview" ];
+        };
         craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
       in
       {
